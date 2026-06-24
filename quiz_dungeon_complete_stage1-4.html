@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数学A 1学期期末考査対策 〜確率ダンジョン〜</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap');
+
+  :root {
+    --bg:        #0f1117;
+    --surface:   #1a1e2e;
+    --card:      #232840;
+    --border:    #343a5a;
+    --accent:    #7c6aff;
+    --accent2:   #ff6a9a;
+    --gold:      #f5c842;
+    --text:      #e8eaf6;
+    --muted:     #8890b8;
+    --green:     #4cdc80;
+    --red:       #ff5a6a;
+    --radius:    14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans JP', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  /* ========== SCREENS ========== */
+  .screen { display: none; width: 100%; max-width: 480px; }
+  .screen.active { display: block; }
+
+  /* ========== TITLE ========== */
+  #screen-title {
+    text-align: center;
+    padding: 40px 24px;
+  }
+  .title-icon { font-size: 72px; margin-bottom: 16px; display: block; }
+  .title-main {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--gold);
+    line-height: 1.35;
+    letter-spacing: 0.02em;
+    text-shadow: 0 0 24px rgba(245,200,66,0.5);
+    margin-bottom: 8px;
+  }
+  .title-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+  .title-deco {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    font-size: 28px;
+    margin-bottom: 32px;
+    opacity: 0.6;
+  }
+  .btn-start {
+    display: block;
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    box-shadow: 0 4px 24px rgba(124,106,255,0.4);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .btn-start:active { transform: scale(0.97); box-shadow: none; }
+
+  /* ========== QUESTION ========== */
+  #screen-question { padding: 8px 0; }
+
+  .progress-bar-wrap {
+    background: var(--surface);
+    border-radius: 99px;
+    height: 8px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 99px;
+    transition: width 0.4s;
+  }
+  .progress-label {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: right;
+    margin-bottom: 12px;
+  }
+
+  /* enemy card */
+  .enemy-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .enemy-emoji { font-size: 48px; line-height: 1; }
+  .enemy-info { flex: 1; }
+  .enemy-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent2);
+    margin-bottom: 6px;
+  }
+  .enemy-hp-wrap {
+    background: #111;
+    border-radius: 99px;
+    height: 10px;
+    overflow: hidden;
+  }
+  .enemy-hp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff4444, #ff9944);
+    border-radius: 99px;
+    transition: width 0.5s;
+  }
+  .enemy-hp-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* battle message */
+  .battle-msg {
+    font-size: 13px;
+    color: var(--gold);
+    text-align: center;
+    margin-bottom: 12px;
+    min-height: 20px;
+    font-weight: 700;
+  }
+
+  /* question card */
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .question-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .question-text {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  /* choices */
+  .choices { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .btn-choice {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-size: 15px;
+    font-family: inherit;
+    padding: 14px 16px;
+    text-align: left;
+    cursor: pointer;
+    line-height: 1.5;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .btn-choice:active { transform: scale(0.98); }
+  .btn-choice:not(:disabled):hover {
+    background: #2a3050;
+    border-color: var(--accent);
+  }
+  .choice-letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--border);
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .btn-choice.correct {
+    background: rgba(76,220,128,0.12);
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .btn-choice.correct .choice-letter { background: var(--green); color: #000; }
+  .btn-choice.incorrect {
+    background: rgba(255,90,106,0.12);
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .btn-choice.incorrect .choice-letter { background: var(--red); color: #fff; }
+  .btn-choice:disabled { cursor: default; }
+
+  /* result box */
+  .result-box {
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 16px;
+    display: none;
+  }
+  .result-box.correct {
+    background: rgba(76,220,128,0.1);
+    border: 1px solid var(--green);
+  }
+  .result-box.incorrect {
+    background: rgba(255,90,106,0.1);
+    border: 1px solid var(--red);
+  }
+  .result-box.active { display: block; }
+  .result-label {
+    font-size: 15px;
+    font-weight: 900;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .result-box.correct .result-label { color: var(--green); }
+  .result-box.incorrect .result-label { color: var(--red); }
+  .explanation-text {
+    font-size: 13px;
+    line-height: 1.75;
+    color: #c8cde8;
+  }
+
+  .btn-next {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    border-radius: var(--radius);
+    color: var(--accent);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+  }
+  .btn-next:hover { background: rgba(124,106,255,0.1); }
+  .btn-next:active { transform: scale(0.98); }
+
+  /* ========== STAGE CLEAR ========== */
+  #screen-stage-clear { text-align: center; padding: 40px 20px; }
+  .stage-clear-icon { font-size: 72px; display: block; margin-bottom: 16px; }
+  .stage-clear-title {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(245,200,66,0.5);
+    margin-bottom: 8px;
+  }
+  .stage-clear-sub {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+  .stage-score-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 28px;
+  }
+  .stage-score-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 15px;
+  }
+  .stage-score-row:last-child { border-bottom: none; }
+  .stage-score-row .label { color: var(--muted); }
+  .stage-score-row .value { font-weight: 700; font-size: 18px; color: var(--text); }
+  .stage-score-row.main .value { font-size: 26px; color: var(--gold); }
+  .btn-next-stage {
+    display: block;
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    font-size: 17px;
+    font-weight: 700;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 4px 20px rgba(124,106,255,0.35);
+    transition: transform 0.1s;
+  }
+  .btn-next-stage:active { transform: scale(0.97); }
+
+  /* ========== FINAL ========== */
+  #screen-final { text-align: center; padding: 40px 20px; }
+  .final-icon { font-size: 72px; display: block; margin-bottom: 16px; }
+  .final-title {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(245,200,66,0.5);
+    margin-bottom: 24px;
+  }
+  .score-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .score-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 15px;
+  }
+  .score-row:last-child { border-bottom: none; }
+  .score-row .label { color: var(--muted); }
+  .score-row .value { font-weight: 700; font-size: 18px; color: var(--text); }
+  .score-row.main .value { font-size: 28px; color: var(--gold); }
+  .rank-badge {
+    display: inline-block;
+    padding: 10px 28px;
+    border-radius: 99px;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    margin-bottom: 24px;
+  }
+  .rank-badge.s { background: rgba(245,200,66,0.2); color: var(--gold); border: 2px solid var(--gold); }
+  .rank-badge.a { background: rgba(76,220,128,0.15); color: var(--green); border: 2px solid var(--green); }
+  .rank-badge.b { background: rgba(124,106,255,0.15); color: var(--accent); border: 2px solid var(--accent); }
+  .rank-badge.c { background: rgba(136,144,184,0.15); color: var(--muted); border: 2px solid var(--muted); }
+  .btn-retry {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 4px 20px rgba(124,106,255,0.3);
+  }
+  .btn-retry:active { transform: scale(0.97); }
+
+  /* ========== VERTICAL FRACTION ========== */
+  .frac {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    line-height: 1.05;
+    margin: 0 0.12em;
+    font-size: 1.05em;
+  }
+  .frac .top {
+    border-bottom: 1.5px solid currentColor;
+    padding: 0 0.25em 0.08em;
+  }
+  .frac .bottom {
+    padding: 0.08em 0.25em 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- TITLE -->
+<div id="screen-title" class="screen active">
+  <span class="title-icon">🏰</span>
+  <div class="title-main">数学A 1学期期末考査対策<br>〜確率ダンジョン〜</div>
+  <div class="title-sub">全問制覇して試験に備えよう！</div>
+  <div class="title-deco">⚔️ 🛡️ 🔮</div>
+  <button class="btn-start" onclick="startGame()">ゲームスタート</button>
+</div>
+
+<!-- QUESTION -->
+<div id="screen-question" class="screen">
+  <div class="progress-label" id="progress-label"></div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-bar"></div>
+  </div>
+
+  <div class="enemy-card">
+    <div class="enemy-emoji" id="enemy-emoji">👹</div>
+    <div class="enemy-info">
+      <div class="enemy-name" id="enemy-name">???</div>
+      <div class="enemy-hp-wrap">
+        <div class="enemy-hp-fill" id="enemy-hp-fill" style="width:100%"></div>
+      </div>
+      <div class="enemy-hp-label" id="enemy-hp-label">HP ???</div>
+    </div>
+  </div>
+
+  <div class="battle-msg" id="battle-msg">⚔️ 敵が現れた！</div>
+
+  <div class="question-card">
+    <div class="question-label" id="q-label">問題</div>
+    <div class="question-text" id="question-text"></div>
+  </div>
+
+  <div class="choices" id="choices"></div>
+
+  <div class="result-box" id="result-box">
+    <div class="result-label" id="result-label"></div>
+    <div class="explanation-text" id="explanation-text"></div>
+  </div>
+
+  <button class="btn-next" id="btn-next" onclick="nextQuestion()" style="display:none">次の問題へ ▶</button>
+</div>
+
+<!-- STAGE CLEAR -->
+<div id="screen-stage-clear" class="screen">
+  <span class="stage-clear-icon" id="stage-clear-icon">🌟</span>
+  <div class="stage-clear-title" id="stage-clear-title">エリアクリア！</div>
+  <div class="stage-clear-sub" id="stage-clear-sub"></div>
+  <div class="stage-score-card">
+    <div class="stage-score-row main">
+      <span class="label">正答率</span>
+      <span class="value" id="stage-rate">—</span>
+    </div>
+    <div class="stage-score-row">
+      <span class="label">正解</span>
+      <span class="value" id="stage-correct">—</span>
+    </div>
+    <div class="stage-score-row">
+      <span class="label">問題数</span>
+      <span class="value" id="stage-total">—</span>
+    </div>
+  </div>
+  <button class="btn-next-stage" id="btn-next-stage" onclick="goNextStage()">次のエリアへ ▶</button>
+</div>
+
+<!-- FINAL -->
+<div id="screen-final" class="screen">
+  <span class="final-icon" id="final-icon">🏆</span>
+  <div class="final-title" id="final-title">全エリア制覇！</div>
+  <div class="rank-badge" id="rank-badge">Rank S</div>
+  <div class="score-card">
+    <div class="score-row main">
+      <span class="label">総正答率</span>
+      <span class="value" id="final-rate">—</span>
+    </div>
+    <div class="score-row">
+      <span class="label">総正解数</span>
+      <span class="value" id="final-correct">—</span>
+    </div>
+    <div class="score-row">
+      <span class="label">総問題数</span>
+      <span class="value" id="final-total">—</span>
+    </div>
+  </div>
+  <button class="btn-retry" onclick="startGame()">もう一度挑戦する ↩</button>
+</div>
+
+<script>
+// ========== DATA ==========
+const stage1 = {
+  id: "stage1",
+  title: "旅立ちの草原",
+  groups: [
+    {
+      groupId: "q1",
+      groupTitle: "問1",
+      questions: [
+        {
+          id: "1-1",
+          type: "choice4",
+          question: "1個のさいころを投げる試行において、「4以上の目が出る」という事象を集合で表せ。",
+          choices: ["{4, 5, 6}", "{1, 2, 3}", "{2, 4, 6}", "{1, 3, 5}"],
+          answer: 0,
+          explanation: "さいころの目は1,2,3,4,5,6である。4以上の目は4,5,6なので、事象は{4,5,6}である。"
+        },
+        {
+          id: "1-2",
+          type: "choice4",
+          question: "1個のさいころを投げる試行において、「素数の目が出る」という事象を集合で表せ。",
+          choices: ["{2, 3, 5}", "{1, 2, 3}", "{2, 4, 6}", "{3, 5, 6}"],
+          answer: 0,
+          explanation: "1から6までのうち、素数は2,3,5である。1は素数ではないので、事象は{2,3,5}である。"
+        },
+        {
+          id: "1-3",
+          type: "choice4",
+          question: "1個のさいころを投げる試行において、「6の約数の目が出る」という事象を集合で表せ。",
+          choices: ["{1, 2, 3, 6}", "{2, 3, 6}", "{1, 3, 5}", "{1, 2, 4, 6}"],
+          answer: 0,
+          explanation: "6の約数は1,2,3,6である。したがって、事象は{1,2,3,6}である。"
+        }
+      ]
+    },
+    {
+      groupId: "q11",
+      groupTitle: "問11",
+      questions: [
+        {
+          id: "11-1",
+          type: "choice4",
+          question: "1から100までの番号札100枚から1枚引くとき、番号が10の倍数でない確率を求めよ。",
+          choices: ["9/10", "1/10", "89/100", "91/100"],
+          answer: 0,
+          explanation: "1から100までのうち10の倍数は10,20,...,100の10個。10の倍数でない番号は100−10 = 90個なので、確率は90÷100 = 9/10である。"
+        },
+        {
+          id: "11-2",
+          type: "choice4",
+          question: "1から100までの番号札100枚から1枚引くとき、番号が6以上である確率を求めよ。",
+          choices: ["19/20", "47/50", "3/50", "9/20"],
+          answer: 0,
+          explanation: "6以上の番号は6から100までで、100−6+1 = 95個ある。したがって、確率は95÷100 = 19/20である。"
+        }
+      ]
+    },
+    {
+      groupId: "q14",
+      groupTitle: "問14",
+      questions: [
+        {
+          id: "14-1",
+          type: "choice4",
+          question: "1から30までの30枚の番号札から1枚引くとき、その番号が4の倍数または6の倍数である確率を求めよ。",
+          choices: ["1/3", "2/5", "3/10", "7/15"],
+          answer: 0,
+          explanation: "4の倍数は7個、6の倍数は5個、両方に入る12の倍数は2個である。したがって、4の倍数または6の倍数は7+5−2 = 10個。確率は10÷30 = 1/3である。"
+        }
+      ]
+    },
+    {
+      groupId: "q19",
+      groupTitle: "問19",
+      questions: [
+        {
+          id: "19-1",
+          type: "choice4",
+          question: "4個のさいころを同時に投げるとき、少なくとも1個は奇数の目が出る確率を求めよ。",
+          choices: ["15/16", "1/16", "1/2", "7/8"],
+          answer: 0,
+          explanation: "少なくとも1個は奇数の余事象は、4個すべて偶数であること。1個のさいころで偶数が出る確率は1/2なので、4個すべて偶数の確率は(1/2)⁴ = 1/16。したがって、求める確率は1−1/16 = 15/16である。"
+        },
+        {
+          id: "19-2",
+          type: "choice4",
+          question: "4個のさいころを同時に投げるとき、少なくとも1個は2以上の目が出る確率を求めよ。",
+          choices: ["1295/1296", "5/6", "625/1296", "1/1296"],
+          answer: 0,
+          explanation: "少なくとも1個は2以上の余事象は、4個すべて1の目が出ること。4個すべて1の確率は(1/6)⁴ = 1/1296。したがって、求める確率は1−1/1296 = 1295/1296である。"
+        }
+      ]
+    },
+    {
+      groupId: "q23",
+      groupTitle: "問23",
+      questions: [
+        {
+          id: "23-1",
+          type: "choice4",
+          question: "1個のさいころを4回投げるとき、2の目がちょうど3回出る確率を求めよ。",
+          choices: ["5/324", "1/216", "25/1296", "1/54"],
+          answer: 0,
+          explanation: "2の目が出る確率は1/6、出ない確率は5/6である。4回中ちょうど3回出るので、₄C₃×(1/6)³×(5/6) = 4×(1/216)×(5/6) = 5/324である。"
+        },
+        {
+          id: "23-2",
+          type: "choice4",
+          question: "1枚の硬貨を6回投げるとき、表が5回以上出る確率を求めよ。",
+          choices: ["7/64", "3/32", "1/64", "21/64"],
+          answer: 0,
+          explanation: "表が5回以上とは、表が5回または6回出ることである。表が5回出る場合は ₆C₅ = 6通り、表が6回出る場合は1通り。全体は2⁶ = 64通りなので、確率は7/64である。"
+        }
+      ]
+    },
+    {
+      groupId: "q26",
+      groupTitle: "問26",
+      questions: [
+        {
+          id: "26-1",
+          type: "choice4",
+          question: "1から20までの番号が書かれた20枚の札がある。偶数の番号の札が出る事象をA、12以下の番号の札が出る事象をBとするとき、P_A(B)を求めよ。",
+          choices: ["3/5", "3/10", "1/2", "2/5"],
+          answer: 0,
+          explanation: "P_A(B)は、Aが起こったときにBが起こる条件付き確率である。偶数は2,4,6,8,10,12,14,16,18,20の10個。そのうち12以下は2,4,6,8,10,12の6個。したがって、P_A(B) = 6÷10 = 3/5である。"
+        }
+      ]
+    },
+    {
+      groupId: "q29",
+      groupTitle: "問29",
+      questions: [
+        {
+          id: "29-1",
+          type: "choice4",
+          question: "200本のくじがあり、5000円が2本、1000円が3本、200円が5本、はずれが190本である。各賞金が当たる確率の組として正しいものを選べ。",
+          choices: [
+            "5000円:1/100, 1000円:3/200, 200円:1/40, 0円:19/20",
+            "5000円:1/200, 1000円:3/100, 200円:1/20, 0円:19/20",
+            "5000円:1/100, 1000円:1/100, 200円:1/40, 0円:9/10",
+            "5000円:1/100, 1000円:3/100, 200円:1/40, 0円:9/10"
+          ],
+          answer: 0,
+          explanation: "確率は本数を全体の200本で割って求める。5000円は2÷200 = 1/100、1000円は3/200、200円は5÷200 = 1/40、0円は190÷200 = 19/20である。"
+        },
+        {
+          id: "29-2",
+          type: "choice4",
+          question: "5000円が2本、1000円が3本、200円が5本、はずれが190本ある200本のくじを1本引くとき、賞金の期待値を求めよ。",
+          choices: ["70円", "50円", "80円", "100円"],
+          answer: 0,
+          explanation: "期待値は、各賞金×その確率の合計で求める。5000×(2÷200) + 1000×(3÷200) + 200×(5÷200) + 0×(190÷200) = 50 + 15 + 5 = 70円である。"
+        }
+      ]
+    },
+    {
+      groupId: "q34",
+      groupTitle: "問34",
+      questions: [
+        {
+          id: "34-1-a",
+          type: "choice4",
+          question: "赤玉4個と白玉2個が入った袋から玉を1個取り出し、もとに戻さずにもう1個取り出す。1回目に赤玉が出たとき、2回目に白玉が出る確率を求めよ。",
+          choices: ["2/5", "1/3", "4/15", "1/5"],
+          answer: 0,
+          explanation: "1回目に赤玉が出た後、袋の中には赤玉3個、白玉2個の合計5個が残る。2回目に白玉が出る確率は2/5である。"
+        },
+        {
+          id: "34-1-b",
+          type: "choice4",
+          question: "赤玉4個と白玉2個が入った袋から玉を1個取り出し、もとに戻さずにもう1個取り出す。赤玉、白玉の順に出る確率を求めよ。",
+          choices: ["4/15", "2/5", "1/3", "8/15"],
+          answer: 0,
+          explanation: "1回目に赤玉が出る確率は2/3。続いて白玉が出る確率は2/5。したがって、求める確率は(2/3)×(2/5) = 4/15である。"
+        },
+        {
+          id: "34-2-a",
+          type: "choice4",
+          question: "当たりが3本入った8本のくじをA,Bの2人が順に引く。まずAが1本引くとき、Aが当たる確率を求めよ。",
+          choices: ["3/8", "5/8", "3/7", "2/7"],
+          answer: 0,
+          explanation: "8本のくじのうち当たりは3本なので、Aが当たる確率は3/8である。"
+        },
+        {
+          id: "34-2-b",
+          type: "choice4",
+          question: "当たりが3本入った8本のくじをA,Bの2人が順に引く。Aが引いた後、Bが1本引くとき、Bが当たる確率を求めよ。",
+          choices: ["3/8", "3/7", "2/7", "5/8"],
+          answer: 0,
+          explanation: "Aが先に引いても、Bが当たる確率は全体としてAと同じである。よってBが当たる確率は3/8である。計算しても、Aが当たりのとき(3/8)×(2/7)、Aがはずれのとき(5/8)×(3/7)なので、合計は3/28 + 15/56 = 6/56 + 15/56 = 21/56 = 3/8である。"
+        }
+      ]
+    }
+  ]
+};
+
+const stage2 = {
+  id: "stage2",
+  title: "霧深き森",
+  groups: [
+    {
+      groupId: "q2",
+      groupTitle: "問2",
+      questions: [
+        {
+          id: "2-1",
+          type: "choice4",
+          question: "1個のさいころを投げるとき、2以上の目が出る確率を求めよ。",
+          choices: ["5/6", "1/6", "2/3", "1/2"],
+          answer: 0,
+          explanation: "さいころの目は1から6までの6通りである。2以上の目は2,3,4,5,6の5通りなので、確率は5/6である。"
+        },
+        {
+          id: "2-2",
+          type: "choice4",
+          question: "1個のさいころを投げるとき、3の倍数が出る確率を求めよ。",
+          choices: ["1/3", "1/6", "1/2", "2/3"],
+          answer: 0,
+          explanation: "1から6までのうち、3の倍数は3,6の2通りである。全体は6通りなので、確率は2÷6 = 1/3である。"
+        }
+      ]
+    },
+    {
+      groupId: "q5",
+      groupTitle: "問5",
+      questions: [
+        {
+          id: "5-1",
+          type: "choice4",
+          question: "白玉6個と赤玉4個が入った袋から、同時に2個の玉を取り出すとき、2個とも白玉である確率を求めよ。",
+          choices: ["1/3", "2/5", "3/5", "1/2"],
+          answer: 0,
+          explanation: "全部で10個の玉から2個を取り出す場合は₁₀C₂ = 45通り。2個とも白玉である場合は₆C₂ = 15通り。したがって、確率は15÷45 = 1/3である。"
+        },
+        {
+          id: "5-2",
+          type: "choice4",
+          question: "白玉6個と赤玉4個が入った袋から、同時に2個の玉を取り出すとき、白玉と赤玉が1個ずつ出る確率を求めよ。",
+          choices: ["8/15", "4/15", "2/5", "7/15"],
+          answer: 0,
+          explanation: "全部で₁₀C₂ = 45通り。白玉1個と赤玉1個を選ぶ場合は6×4 = 24通り。したがって、確率は24÷45 = 8/15である。"
+        }
+      ]
+    },
+    {
+      groupId: "q7",
+      groupTitle: "問7",
+      questions: [
+        {
+          id: "7-1",
+          type: "choice4",
+          question: "1個のさいころを投げるとき、「奇数の目が出る」という事象をA、「6の約数が出る」という事象をBとする。和事象A∪Bを集合で表せ。",
+          choices: ["{1, 2, 3, 5, 6}", "{1, 3}", "{1, 3, 5}", "{1, 2, 3, 6}"],
+          answer: 0,
+          explanation: "A={1,3,5}、B={1,2,3,6}である。A∪BはAまたはBに含まれる要素をすべて集めるので、{1,2,3,5,6}である。"
+        },
+        {
+          id: "7-2",
+          type: "choice4",
+          question: "1個のさいころを投げるとき、「奇数の目が出る」という事象をA、「6の約数が出る」という事象をBとする。積事象A∩Bを集合で表せ。",
+          choices: ["{1, 3}", "{1, 2, 3, 5, 6}", "{2, 6}", "{3, 5}"],
+          answer: 0,
+          explanation: "A={1,3,5}、B={1,2,3,6}である。A∩BはAとBの両方に含まれる要素なので、{1,3}である。"
+        }
+      ]
+    },
+    {
+      groupId: "q12",
+      groupTitle: "問12",
+      questions: [
+        {
+          id: "12-1",
+          type: "choice4",
+          question: "3個のさいころを同時に投げるとき、少なくとも1個は偶数の目が出る確率を求めよ。",
+          choices: ["7/8", "1/8", "3/8", "5/8"],
+          answer: 0,
+          explanation: "少なくとも1個は偶数の余事象は、3個すべて奇数であること。1個のさいころで奇数が出る確率は1/2なので、3個すべて奇数の確率は(1/2)³ = 1/8。したがって、求める確率は1−1/8 = 7/8である。"
+        },
+        {
+          id: "12-2",
+          type: "choice4",
+          question: "3個のさいころを同時に投げるとき、少なくとも1個は6の目が出る確率を求めよ。",
+          choices: ["91/216", "1/6", "125/216", "5/36"],
+          answer: 0,
+          explanation: "少なくとも1個は6の目が出る余事象は、3個とも6以外の目が出ること。1個のさいころで6以外が出る確率は5/6なので、3個とも6以外の確率は(5/6)³ = 125/216。したがって、求める確率は1−125/216 = 91/216である。"
+        },
+        {
+          id: "12-3",
+          type: "choice4",
+          question: "3個のさいころを同時に投げるとき、少なくとも1個は3以上の目が出る確率を求めよ。",
+          choices: ["26/27", "1/27", "8/27", "19/27"],
+          answer: 0,
+          explanation: "少なくとも1個は3以上の余事象は、3個とも1または2の目が出ること。1個のさいころで1または2が出る確率は2÷6 = 1/3なので、3個とも1または2の確率は(1/3)³ = 1/27。したがって、求める確率は1−1/27 = 26/27である。"
+        }
+      ]
+    },
+    {
+      groupId: "q20",
+      groupTitle: "問20",
+      questions: [
+        {
+          id: "20-1",
+          type: "choice4",
+          question: "当たりが3本入った12本のくじがある。この中から同時に3本引くとき、少なくとも1本は当たりを引く確率を求めよ。",
+          choices: ["34/55", "21/55", "3/4", "1/4"],
+          answer: 0,
+          explanation: "少なくとも1本は当たりの余事象は、3本ともはずれであること。全体は₁₂C₃ = 220通り、はずれ9本から3本選ぶ場合は₉C₃ = 84通り。3本ともはずれの確率は84÷220 = 21/55。したがって、求める確率は1−21/55 = 34/55である。"
+        }
+      ]
+    },
+    {
+      groupId: "q22",
+      groupTitle: "問22",
+      questions: [
+        {
+          id: "22-1",
+          type: "choice4",
+          question: "1個のさいころと1枚の硬貨を投げるとき、さいころは偶数の目が出て、硬貨は表が出る確率を求めよ。",
+          choices: ["1/4", "1/2", "1/3", "1/6"],
+          answer: 0,
+          explanation: "さいころで偶数の目が出る確率は3÷6 = 1/2、硬貨で表が出る確率は1/2である。2つの試行は独立なので、求める確率は1/2×1/2 = 1/4である。"
+        },
+        {
+          id: "22-2",
+          type: "choice4",
+          question: "赤玉6個と白玉2個が入った袋Sと、赤玉と白玉が4個ずつ入った袋Tがある。それぞれの袋から玉を1個ずつ取り出すとき、両方とも白玉が出る確率を求めよ。",
+          choices: ["1/8", "1/4", "3/8", "1/2"],
+          answer: 0,
+          explanation: "袋Sから白玉が出る確率は2÷8 = 1/4、袋Tから白玉が出る確率は4÷8 = 1/2である。それぞれの袋から取り出すので、求める確率は1/4×1/2 = 1/8である。"
+        }
+      ]
+    },
+    {
+      groupId: "q27",
+      groupTitle: "問27",
+      questions: [
+        {
+          id: "27-1",
+          type: "choice4",
+          question: "赤玉3個と白玉6個が入った袋から玉を1個取り出し、玉をもとに戻さずにもう1個取り出す。1回目に白玉が出たとき、2回目に赤玉が出る確率を求めよ。",
+          choices: ["3/8", "1/3", "1/4", "2/3"],
+          answer: 0,
+          explanation: "1回目に白玉が出た後、袋の中には赤玉3個、白玉5個の合計8個が残る。したがって、2回目に赤玉が出る確率は3/8である。"
+        },
+        {
+          id: "27-2",
+          type: "choice4",
+          question: "赤玉3個と白玉6個が入った袋から玉を1個取り出し、玉をもとに戻さずにもう1個取り出す。白玉、赤玉の順に出る確率を求めよ。",
+          choices: ["1/4", "3/8", "2/9", "5/12"],
+          answer: 0,
+          explanation: "1回目に白玉が出る確率は6÷9 = 2/3である。その後、赤玉が出る確率は3/8である。したがって、求める確率は2/3×3/8 = 1/4である。"
+        }
+      ]
+    },
+    {
+      groupId: "q30",
+      groupTitle: "問30",
+      questions: [
+        {
+          id: "30-1",
+          type: "choice4",
+          question: "1個のさいころを投げて、1,2,3の目が出たら100円、4,5の目が出たら300円、6の目が出たら1200円の賞金が得られる。このとき、得られる賞金の期待値を求めよ。",
+          choices: ["350円", "300円", "400円", "500円"],
+          answer: 0,
+          explanation: "100円が得られる確率は3÷6 = 1/2、300円が得られる確率は2÷6 = 1/3、1200円が得られる確率は1÷6 = 1/6である。期待値は100×(1/2) + 300×(1/3) + 1200×(1/6) = 50 + 100 + 200 = 350円である。"
+        }
+      ]
+    }
+  ]
+};
+
+
+const stage3 = {
+  id: "stage3",
+  title: "古代遺跡",
+  groups: [
+    {
+      groupId: "q3",
+      groupTitle: "問3",
+      questions: [
+        {
+          id: "3-1",
+          type: "choice4",
+          question: "3枚の10円硬貨を同時に投げるとき、3枚とも表が出る確率を求めよ。",
+          choices: ["1/8", "1/4", "3/8", "1/2"],
+          answer: 0,
+          explanation: "3枚の硬貨の表裏の出方は全部で 2×2×2=8 通りある。3枚とも表になるのは「表表表」の1通りなので、確率は 1/8 である。"
+        },
+        {
+          id: "3-2",
+          type: "choice4",
+          question: "3枚の10円硬貨を同時に投げるとき、表が2枚、裏が1枚出る確率を求めよ。",
+          choices: ["3/8", "1/8", "1/2", "3/4"],
+          answer: 0,
+          explanation: "3枚の硬貨の出方は全部で8通りある。表が2枚、裏が1枚になるのは「表表裏」「表裏表」「裏表表」の3通りなので、確率は 3/8 である。"
+        }
+      ]
+    },
+    {
+      groupId: "q6",
+      groupTitle: "問6",
+      questions: [
+        {
+          id: "6-1",
+          type: "choice4",
+          question: "1から50までの番号が書かれたカードを1枚だけ引くとき、番号が9の倍数である確率を求めよ。",
+          choices: ["1/10", "5/9", "9/50", "1/5"],
+          answer: 0,
+          explanation: "1から50までの中で9の倍数は 9, 18, 27, 36, 45 の5個である。全部で50枚あるので、確率は 5/50=1/10 である。"
+        },
+        {
+          id: "6-2",
+          type: "choice4",
+          question: "1から50までの番号が書かれたカードを1枚だけ引くとき、番号が12の倍数である確率を求めよ。",
+          choices: ["2/25", "3/25", "1/12", "1/10"],
+          answer: 0,
+          explanation: "1から50までの中で12の倍数は 12, 24, 36, 48 の4個である。全部で50枚あるので、確率は 4/50=2/25 である。"
+        }
+      ]
+    },
+    {
+      groupId: "q8",
+      groupTitle: "問8",
+      questions: [
+        {
+          id: "8-1",
+          type: "choice4",
+          question: "1個のさいころを投げるとき、「2以下の目が出る」という事象をA、「3の倍数の目が出る」という事象をBとする。このとき、P(A)を求めよ。",
+          choices: ["1/3", "1/6", "1/2", "2/3"],
+          answer: 0,
+          explanation: "Aは2以下の目が出る事象なので、A={1, 2} である。さいころの目は全部で6通り、そのうち2通りだから、P(A)=2/6=1/3 である。"
+        },
+        {
+          id: "8-2",
+          type: "choice4",
+          question: "1個のさいころを投げるとき、「2以下の目が出る」という事象をA、「3の倍数の目が出る」という事象をBとする。このとき、P(B)を求めよ。",
+          choices: ["1/3", "1/6", "1/2", "2/3"],
+          answer: 0,
+          explanation: "Bは3の倍数の目が出る事象なので、B={3, 6} である。さいころの目は全部で6通り、そのうち2通りだから、P(B)=2/6=1/3 である。"
+        },
+        {
+          id: "8-3",
+          type: "choice4",
+          question: "1個のさいころを投げるとき、「2以下の目が出る」という事象をA、「3の倍数の目が出る」という事象をBとする。このとき、P(A∪B)を求めよ。",
+          choices: ["2/3", "1/3", "1/2", "5/6"],
+          answer: 0,
+          explanation: "A={1, 2}, B={3, 6} なので、A∪B={1, 2, 3, 6} である。全部で6通りのうち4通りだから、P(A∪B)=4/6=2/3 である。"
+        }
+      ]
+    },
+    {
+      groupId: "q10",
+      groupTitle: "問10",
+      questions: [
+        {
+          id: "10-1",
+          type: "choice4",
+          question: "赤玉6個と白玉4個が入った袋から、同時に2個の玉を取り出すとき、2個が同じ色である確率を求めよ。",
+          choices: ["7/15", "8/15", "3/5", "2/5"],
+          answer: 0,
+          explanation: "全部の取り出し方は 10個から2個を選ぶので 45通り。2個とも赤玉は 6個から2個で15通り、2個とも白玉は 4個から2個で6通り。よって同じ色は 15+6=21通りなので、確率は 21/45=7/15 である。"
+        }
+      ]
+    },
+    {
+      groupId: "q13",
+      groupTitle: "問13",
+      questions: [
+        {
+          id: "13-1",
+          type: "choice4",
+          question: "当たりが4本入った10本のくじがある。この中から同時に3本引くとき、少なくとも1本は当たりを引く確率を求めよ。",
+          choices: ["5/6", "2/5", "1/2", "3/4"],
+          answer: 0,
+          explanation: "少なくとも1本当たりを引く確率は、1から3本ともはずれを引く確率を引くと求めやすい。はずれは6本なので、3本ともはずれの確率は C(6,3)/C(10,3)=20/120=1/6。したがって、求める確率は 1-1/6=5/6 である。"
+        }
+      ]
+    },
+    {
+      groupId: "q21",
+      groupTitle: "問21",
+      questions: [
+        {
+          id: "21-1",
+          type: "choice4",
+          question: "1から40までの40枚の番号札から1枚引くとき、その番号が3の倍数または4の倍数である確率を求めよ。",
+          choices: ["1/2", "13/40", "23/40", "3/5"],
+          answer: 0,
+          explanation: "1から40までで3の倍数は13個、4の倍数は10個ある。両方に数えられる12の倍数は 12, 24, 36 の3個。したがって、3の倍数または4の倍数は 13+10-3=20個なので、確率は 20/40=1/2 である。"
+        }
+      ]
+    },
+    {
+      groupId: "q24",
+      groupTitle: "問24",
+      questions: [
+        {
+          id: "24-1",
+          type: "choice4",
+          question: "1個のさいころを5回投げるとき、偶数の目がちょうど3回出る確率を求めよ。",
+          choices: ["5/16", "3/16", "1/4", "1/2"],
+          answer: 0,
+          explanation: "1回の試行で偶数の目が出る確率は 3/6=1/2 である。5回のうちちょうど3回偶数が出る場合は、偶数が出る3回の位置を選ぶので C(5,3)=10 通り。よって確率は C(5,3)(1/2)^3(1/2)^2=10/32=5/16 である。"
+        }
+      ]
+    },
+    {
+      groupId: "q28",
+      groupTitle: "問28",
+      questions: [
+        {
+          id: "28-1",
+          type: "choice4",
+          question: "当たりが2本入った7本のくじがある。このくじをA、Bの2人が引く。まずAが1本引き、残りの6本からBが1本引くとき、Aが当たる確率を求めよ。",
+          choices: ["2/7", "1/7", "1/3", "5/7"],
+          answer: 0,
+          explanation: "7本のくじのうち当たりは2本である。Aは最初に7本から1本引くので、Aが当たる確率は 2/7 である。"
+        },
+        {
+          id: "28-2",
+          type: "choice4",
+          question: "当たりが2本入った7本のくじがある。このくじをA、Bの2人が引く。まずAが1本引き、残りの6本からBが1本引くとき、Bが当たる確率を求めよ。",
+          choices: ["2/7", "1/3", "5/21", "1/7"],
+          answer: 0,
+          explanation: "Bが当たる確率は、Aが当たりを引く場合とAがはずれを引く場合に分ける。Aが当たりなら Bが当たる確率は 1/6、Aがはずれなら Bが当たる確率は 2/6。よって (2/7)(1/6)+(5/7)(2/6)=2/42+10/42=12/42=2/7 である。"
+        },
+        {
+          id: "28-3",
+          type: "choice4",
+          question: "当たりが2本入った7本のくじがある。このくじをA、Bの2人が引く。まずAが1本引き、残りの6本からBが1本引くとき、A、Bの2人とも当たらない確率を求めよ。",
+          choices: ["10/21", "5/7", "5/14", "2/7"],
+          answer: 0,
+          explanation: "はずれは5本ある。Aがはずれを引く確率は 5/7。その後、残り6本のうち、はずれは4本なので、Bもはずれる確率は 4/6。したがって、確率は (5/7)(4/6)=20/42=10/21 である。"
+        },
+        {
+          id: "28-4",
+          type: "choice4",
+          question: "当たりが2本入った7本のくじがある。このくじをA、Bの2人が引く。まずAが1本引き、残りの6本からBが1本引くとき、A、Bのどちらか1人だけが当たる確率を求めよ。",
+          choices: ["10/21", "2/7", "5/21", "1/2"],
+          answer: 0,
+          explanation: "どちらか1人だけが当たるのは、「Aが当たり、Bがはずれ」または「Aがはずれ、Bが当たり」の場合である。確率は (2/7)(5/6)+(5/7)(2/6)=10/42+10/42=20/42=10/21 である。"
+        }
+      ]
+    },
+    {
+      groupId: "q32",
+      groupTitle: "問32",
+      questions: [
+        {
+          id: "32-1",
+          type: "choice4",
+          question: "赤玉4個と白玉3個が入った袋から、2個の玉を同時に取り出すとき、赤玉の出る個数の期待値を求めよ。",
+          choices: ["8/7個", "4/7個", "1個", "6/7個"],
+          answer: 0,
+          explanation: "赤玉の出る個数をXとする。2個取り出すので、1個あたり赤玉である確率は 4/7。期待値は取り出す個数2個に赤玉である確率 4/7 をかけて、2×4/7=8/7 個である。"
+        }
+      ]
+    }
+  ]
+};
+
+const stage4 = {
+  id: "stage4",
+  title: "星降る城",
+  groups: [
+    {
+      groupId: "q4",
+      groupTitle: "問4",
+      questions: [
+        {
+          id: "4-1",
+          type: "choice4",
+          question: "2個のさいころを同時に投げるとき、目の和が10になる確率を求めよ。",
+          choices: ["1/12", "1/9", "1/6", "5/36"],
+          answer: 0,
+          explanation: "2個のさいころの目の出方は全部で 6×6=36 通りある。和が10になるのは (4,6), (5,5), (6,4) の3通りなので、確率は 3/36=1/12 である。"
+        },
+        {
+          id: "4-2",
+          type: "choice4",
+          question: "2個のさいころを同時に投げるとき、2個とも偶数の目が出る確率を求めよ。",
+          choices: ["1/4", "1/3", "1/2", "1/6"],
+          answer: 0,
+          explanation: "1個のさいころで偶数の目は 2, 4, 6 の3通りなので、偶数が出る確率は 3/6=1/2 である。2個とも偶数になる確率は (1/2)×(1/2)=1/4 である。"
+        },
+        {
+          id: "4-3",
+          type: "choice4",
+          question: "2個のさいころを同時に投げるとき、目の積が奇数になる確率を求めよ。",
+          choices: ["1/4", "1/3", "1/2", "3/4"],
+          answer: 0,
+          explanation: "積が奇数になるのは、2個のさいころがどちらも奇数の目を出すときである。奇数の目は 1, 3, 5 の3通りなので、1個が奇数になる確率は 3/6=1/2。よって、2個とも奇数になる確率は (1/2)×(1/2)=1/4 である。"
+        }
+      ]
+    },
+    {
+      groupId: "q9",
+      groupTitle: "問9",
+      questions: [
+        {
+          id: "9-1",
+          type: "choice4",
+          question: "1等から4等までの当たる確率が、1等 2/100、2等 4/100、3等 10/100、4等 20/100、はずれ 64/100 のくじがある。このくじを1本引くとき、1等から3等までのいずれかが当たる確率を求めよ。",
+          choices: ["4/25", "3/25", "9/50", "1/5"],
+          answer: 0,
+          explanation: "1等から3等までのいずれかが当たる確率は、それぞれの確率を加えればよい。2/100+4/100+10/100=16/100=4/25 である。"
+        },
+        {
+          id: "9-2",
+          type: "choice4",
+          question: "1等から4等までの当たる確率が、1等 2/100、2等 4/100、3等 10/100、4等 20/100、はずれ 64/100 のくじがある。このくじを1本引くとき、2等から4等までのいずれかが当たる確率を求めよ。",
+          choices: ["17/50", "9/25", "8/25", "7/25"],
+          answer: 0,
+          explanation: "2等から4等までのいずれかが当たる確率は、4/100+10/100+20/100=34/100=17/50 である。"
+        }
+      ]
+    },
+    {
+      groupId: "q15",
+      groupTitle: "問15",
+      questions: [
+        {
+          id: "15-1",
+          type: "choice4",
+          question: "1個のさいころを投げるとき、「偶数の目が出る」という事象をA、「4の約数が出る」という事象をBとする。和事象 A∪B を集合で表せ。",
+          choices: ["{1, 2, 4, 6}", "{2, 4, 6}", "{1, 2, 4}", "{2, 4}"],
+          answer: 0,
+          explanation: "Aは偶数の目が出る事象なので A={2, 4, 6}、Bは4の約数の目が出る事象なので B={1, 2, 4} である。A∪B はAまたはBに入る目を集めるので、{1, 2, 4, 6} である。"
+        },
+        {
+          id: "15-2",
+          type: "choice4",
+          question: "1個のさいころを投げるとき、「偶数の目が出る」という事象をA、「4の約数が出る」という事象をBとする。積事象 A∩B を集合で表せ。",
+          choices: ["{2, 4}", "{1, 2, 4}", "{2, 4, 6}", "{1, 2, 4, 6}"],
+          answer: 0,
+          explanation: "A={2, 4, 6}、B={1, 2, 4} である。A∩B はAにもBにも入る共通の目を集めるので、{2, 4} である。"
+        }
+      ]
+    },
+    {
+      groupId: "q16",
+      groupTitle: "問16",
+      questions: [
+        {
+          id: "16-1",
+          type: "choice4",
+          question: "1等から4等までの当たる確率が、1等 1/20、2等 3/20、3等 5/20、4等 7/20、はずれ 4/20 のくじがある。このくじを1本引くとき、1等または2等が当たる確率を求めよ。",
+          choices: ["1/5", "1/4", "3/10", "2/5"],
+          answer: 0,
+          explanation: "1等または2等が当たる確率は、それぞれの確率を加えればよい。1/20+3/20=4/20=1/5 である。"
+        },
+        {
+          id: "16-2",
+          type: "choice4",
+          question: "1等から4等までの当たる確率が、1等 1/20、2等 3/20、3等 5/20、4等 7/20、はずれ 4/20 のくじがある。このくじを1本引くとき、2等から4等までのいずれかが当たる確率を求めよ。",
+          choices: ["3/4", "4/5", "7/10", "2/3"],
+          answer: 0,
+          explanation: "2等から4等までのいずれかが当たる確率は、3/20+5/20+7/20=15/20=3/4 である。"
+        }
+      ]
+    },
+    {
+      groupId: "q17",
+      groupTitle: "問17",
+      questions: [
+        {
+          id: "17-1",
+          type: "choice4",
+          question: "赤玉5個と白玉6個が入った袋から、同時に2個の玉を取り出すとき、2個が同じ色である確率を求めよ。",
+          choices: ["5/11", "6/11", "1/2", "4/11"],
+          answer: 0,
+          explanation: "全部の取り出し方は 11個から2個を選ぶので C(11,2)=55 通り。2個とも赤玉は C(5,2)=10 通り、2個とも白玉は C(6,2)=15 通り。よって同じ色は 10+15=25 通りなので、確率は 25÷55=5/11 である。"
+        }
+      ]
+    },
+    {
+      groupId: "q18",
+      groupTitle: "問18",
+      questions: [
+        {
+          id: "18-1",
+          type: "choice4",
+          question: "1から50までの番号札50枚から1枚引くとき、番号が5の倍数でない確率を求めよ。",
+          choices: ["4/5", "1/5", "9/10", "3/5"],
+          answer: 0,
+          explanation: "1から50までの中で5の倍数は 5, 10, 15, …, 50 の10個である。5の倍数でない番号は 50-10=40 個なので、確率は 40/50=4/5 である。"
+        }
+      ]
+    },
+    {
+      groupId: "q25",
+      groupTitle: "問25",
+      questions: [
+        {
+          id: "25-1",
+          type: "choice4",
+          question: "1枚の硬貨を5回投げるとき、表がちょうど3回出る確率を求めよ。",
+          choices: ["5/16", "3/16", "1/4", "1/2"],
+          answer: 0,
+          explanation: "1回の試行で表が出る確率は 1/2 である。5回のうちちょうど3回表が出る場合は、表が出る3回の位置を選ぶので C(5,3)=10 通り。よって確率は C(5,3)(1/2)^3(1/2)^2=10/32=5/16 である。"
+        }
+      ]
+    },
+    {
+      groupId: "q31",
+      groupTitle: "問31",
+      questions: [
+        {
+          id: "31-1",
+          type: "choice4",
+          question: "当たりくじが3本入った10本のくじから同時に2本引くとき、引く当たりくじの本数の期待値を求めよ。",
+          choices: ["3/5本", "2/5本", "3/10本", "1本"],
+          answer: 0,
+          explanation: "2本引くうち、1本について当たりである確率は 3/10 である。期待値は、引く本数2本に当たりである確率 3/10 をかけて、2×3/10=3/5 本である。"
+        }
+      ]
+    },
+    {
+      groupId: "q33",
+      groupTitle: "問33",
+      questions: [
+        {
+          id: "33-1",
+          type: "choice4",
+          question: "3枚の硬貨を同時に投げるとき、表の出る枚数の期待値を求めよ。",
+          choices: ["3/2枚", "1枚", "2枚", "3/4枚"],
+          answer: 0,
+          explanation: "1枚の硬貨で表が出る確率は 1/2 である。3枚それぞれについて表が出るかを考えると、期待値は 3×1/2=3/2 枚である。"
+        }
+      ]
+    }
+  ]
+};
+
+// ========== STAGES ==========
+const stages = [stage1, stage2, stage3, stage4];
+
+// ========== ENEMY POOL ==========
+const ENEMIES = [
+  { name: "スライム",       emoji: "🟩", hp: 3 },
+  { name: "コウモリ",       emoji: "🦇", hp: 4 },
+  { name: "ゴブリン",       emoji: "👺", hp: 5 },
+  { name: "スケルトン",     emoji: "💀", hp: 5 },
+  { name: "オーク",         emoji: "👹", hp: 6 },
+  { name: "マジックアイ",   emoji: "👁️",  hp: 5 },
+  { name: "フレイムバット", emoji: "🔥", hp: 6 },
+  { name: "ダークナイト",   emoji: "🗡️",  hp: 7 },
+  { name: "ドラゴンパップ", emoji: "🐉", hp: 8 },
+];
+
+// ========== STATE ==========
+let shuffledStages = [];   // ステージの並び（シャッフル済み）
+let stageIndex = 0;        // 現在のステージ番号
+let queue = [];            // 現ステージの問題キュー
+let currentIndex = 0;      // 現ステージ内の問題番号
+let stageScore = 0;        // 現ステージの正答数
+let totalScore = 0;        // 全ステージ通算正答数
+let totalQuestions = 0;    // 全ステージ通算問題数
+let answered = false;
+let currentEnemy = null;
+let enemyHp = 0;
+
+const LETTERS = ["Ａ", "Ｂ", "Ｃ", "Ｄ"];
+
+// ========== MATH FORMATTING ==========
+function formatMathText(text) {
+  return String(text).replace(/(\d+)\/(\d+)/g, function(match, num, den) {
+    return '<span class="frac"><span class="top">' + num + '</span><span class="bottom">' + den + '</span></span>';
+  });
+}
+
+// ========== UTILS ==========
+function shuffleArray(array) {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function shuffleChoices(question) {
+  const correctText = question.choices[question.answer];
+  const shuffled = shuffleArray(question.choices);
+  const newAnswer = shuffled.indexOf(correctText);
+  return { ...question, choices: shuffled, answer: newAnswer };
+}
+
+function buildQuestionQueue(stage) {
+  const shuffledGroups = shuffleArray(stage.groups);
+  const q = [];
+  for (const group of shuffledGroups) {
+    for (const question of group.questions) {
+      q.push(shuffleChoices(question));
+    }
+  }
+  return q;
+}
+
+function pickEnemy() {
+  return ENEMIES[Math.floor(Math.random() * ENEMIES.length)];
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ========== GAME FLOW ==========
+function startGame() {
+  // ステージをシャッフル
+  shuffledStages = shuffleArray(stages);
+  stageIndex = 0;
+  totalScore = 0;
+  totalQuestions = 0;
+  startStage();
+}
+
+function startStage() {
+  const stage = shuffledStages[stageIndex];
+  queue = buildQuestionQueue(stage);
+  currentIndex = 0;
+  stageScore = 0;
+  showScreen('screen-question');
+  showQuestion();
+}
+
+function showQuestion() {
+  answered = false;
+  const q = queue[currentIndex];
+  const stageTotal = queue.length;
+
+  // progress（ステージ内）
+  document.getElementById('progress-label').textContent =
+    `エリア ${stageIndex + 1}/${shuffledStages.length}　問題 ${currentIndex + 1} / ${stageTotal}`;
+  document.getElementById('progress-bar').style.width =
+    `${(currentIndex / stageTotal) * 100}%`;
+
+  // enemy
+  currentEnemy = pickEnemy();
+  enemyHp = currentEnemy.hp;
+  document.getElementById('enemy-emoji').textContent = currentEnemy.emoji;
+  document.getElementById('enemy-name').textContent = currentEnemy.name + ' が現れた！';
+  document.getElementById('enemy-hp-fill').style.width = '100%';
+  document.getElementById('enemy-hp-label').textContent = `HP ${enemyHp} / ${enemyHp}`;
+
+  // battle msg
+  document.getElementById('battle-msg').textContent = '⚔️ さあ、問いに答えよ！';
+
+  // question
+  document.getElementById('q-label').textContent = `問題 ${currentIndex + 1}`;
+  document.getElementById('question-text').innerHTML = formatMathText(q.question);
+
+  // choices
+  const choicesEl = document.getElementById('choices');
+  choicesEl.innerHTML = '';
+  q.choices.forEach((choice, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'btn-choice';
+    btn.innerHTML = `<span class="choice-letter">${LETTERS[i]}</span><span>${formatMathText(choice)}</span>`;
+    btn.onclick = () => checkAnswer(i);
+    choicesEl.appendChild(btn);
+  });
+
+  // result box reset
+  const rb = document.getElementById('result-box');
+  rb.className = 'result-box';
+  document.getElementById('result-label').innerHTML = '';
+  document.getElementById('explanation-text').innerHTML = '';
+
+  // next btn
+  document.getElementById('btn-next').style.display = 'none';
+}
+
+function checkAnswer(selectedIndex) {
+  if (answered) return;
+  answered = true;
+
+  const q = queue[currentIndex];
+  const correct = q.answer;
+  const isCorrect = selectedIndex === correct;
+
+  if (isCorrect) {
+    stageScore++;
+    totalScore++;
+  }
+  totalQuestions++;
+
+  // color choices
+  const btns = document.querySelectorAll('.btn-choice');
+  btns.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === correct) btn.classList.add('correct');
+    else if (i === selectedIndex) btn.classList.add('incorrect');
+  });
+
+  // result box
+  const rb = document.getElementById('result-box');
+  const rl = document.getElementById('result-label');
+  const ex = document.getElementById('explanation-text');
+
+  if (isCorrect) {
+    rb.className = 'result-box correct active';
+    rl.innerHTML = '✅ 正解！ダメージを与えた！';
+    document.getElementById('enemy-hp-fill').style.width = '0%';
+    document.getElementById('enemy-hp-label').textContent = 'HP 0 / ' + enemyHp;
+    document.getElementById('enemy-name').textContent = currentEnemy.name + ' を倒した！';
+    document.getElementById('battle-msg').textContent = '💥 クリティカルヒット！';
+  } else {
+    rb.className = 'result-box incorrect active';
+    rl.innerHTML = '❌ 不正解…ダメージを受けた！';
+    document.getElementById('enemy-hp-fill').style.width = '100%';
+    document.getElementById('battle-msg').textContent = '😵 やられた！次こそ！';
+  }
+
+  ex.innerHTML = formatMathText(q.explanation);
+
+  // next button
+  const btnNext = document.getElementById('btn-next');
+  const isLastQ = currentIndex >= queue.length - 1;
+  const isLastStage = stageIndex >= shuffledStages.length - 1;
+
+  if (isLastQ && isLastStage) {
+    btnNext.textContent = '総合結果を見る 🏆';
+  } else if (isLastQ) {
+    btnNext.textContent = 'エリアクリア！ 🌟';
+  } else {
+    btnNext.textContent = '次の問題へ ▶';
+  }
+  btnNext.style.display = 'block';
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= queue.length) {
+    // このステージ終了
+    showStageClear();
+  } else {
+    document.getElementById('progress-bar').style.width =
+      `${(currentIndex / queue.length) * 100}%`;
+    showQuestion();
+  }
+}
+
+function showStageClear() {
+  const stageTotal = queue.length;
+  const rate = Math.round((stageScore / stageTotal) * 100);
+  const isLastStage = stageIndex >= shuffledStages.length - 1;
+
+  document.getElementById('stage-correct').textContent = `${stageScore} 問`;
+  document.getElementById('stage-total').textContent = `${stageTotal} 問`;
+  document.getElementById('stage-rate').textContent = `${rate}%`;
+
+  // アイコン・タイトル
+  if (rate >= 80) {
+    document.getElementById('stage-clear-icon').textContent = '🌟';
+    document.getElementById('stage-clear-title').textContent = 'エリアクリア！';
+  } else if (rate >= 50) {
+    document.getElementById('stage-clear-icon').textContent = '⚔️';
+    document.getElementById('stage-clear-title').textContent = 'エリア突破！';
+  } else {
+    document.getElementById('stage-clear-icon').textContent = '🛡️';
+    document.getElementById('stage-clear-title').textContent = 'なんとか突破…';
+  }
+
+  const stageName = shuffledStages[stageIndex].title;
+  document.getElementById('stage-clear-sub').textContent = `「${stageName}」を制した！`;
+
+  const btnNextStage = document.getElementById('btn-next-stage');
+  if (isLastStage) {
+    btnNextStage.textContent = '総合結果を見る 🏆';
+  } else {
+    btnNextStage.textContent = '次のエリアへ ▶';
+  }
+
+  showScreen('screen-stage-clear');
+}
+
+function goNextStage() {
+  stageIndex++;
+  if (stageIndex >= shuffledStages.length) {
+    showFinalResult();
+  } else {
+    startStage();
+  }
+}
+
+function showFinalResult() {
+  const rate = Math.round((totalScore / totalQuestions) * 100);
+
+  document.getElementById('final-correct').textContent = `${totalScore} 問`;
+  document.getElementById('final-total').textContent = `${totalQuestions} 問`;
+  document.getElementById('final-rate').textContent = `${rate}%`;
+
+  let rankClass, rankText, icon, title;
+  if (rate >= 90) {
+    rankClass = 's'; rankText = 'Rank S'; icon = '🏆'; title = '完璧！圧倒的な実力！';
+  } else if (rate >= 70) {
+    rankClass = 'a'; rankText = 'Rank A'; icon = '🌟'; title = 'すばらしい！あと一歩！';
+  } else if (rate >= 50) {
+    rankClass = 'b'; rankText = 'Rank B'; icon = '⚔️'; title = 'もう少し！復習で乗り越えろ！';
+  } else {
+    rankClass = 'c'; rankText = 'Rank C'; icon = '🔥'; title = '再挑戦して完全制覇を目指せ！';
+  }
+
+  document.getElementById('final-icon').textContent = icon;
+  document.getElementById('final-title').textContent = title;
+  const badge = document.getElementById('rank-badge');
+  badge.className = `rank-badge ${rankClass}`;
+  badge.textContent = rankText;
+
+  showScreen('screen-final');
+}
+</script>
+</body>
+</html>
